@@ -18,6 +18,34 @@ It only reads data. It needs an API key with the read-only `XROAD_SECURITYSERVER
 
 This is a community project and is not affiliated with or endorsed by NIIS.
 
+## How this compares to the built-in checks
+
+The Security Server has a [health check service](https://github.com/nordic-institute/X-Road/blob/develop/doc/Manuals/LoadBalancing/ig-xlb_x-road_external_load_balancer_installation_guide.md#34-health-check-service-configuration)
+(port 5588, disabled by default). It answers HTTP 200 or 500 and is meant for load balancers.
+Use it for that. This exporter is for monitoring and alerting:
+
+- it tells you *what* is wrong, for example which OCSP responder or which certificate
+- it warns before things break, for example 30 days before a certificate expires
+- it also covers timestamping services, which the health check does not
+- the output is in Prometheus format, so it works with existing dashboards and alerting
+
+The environmental monitoring service also reports certificate data, but in X-Road's own
+format, through an X-Road message or JMX.
+
+## Try the demo
+
+The [`demo`](demo) folder starts a fake Security Server with made-up data, the exporter,
+Prometheus and Grafana:
+
+```bash
+cd demo
+docker compose up -d --build
+```
+
+Open http://localhost:3000 for the dashboard and http://localhost:9090/alerts for the alerts.
+In the demo data one OCSP responder is failing and one signing certificate expires in 21 days.
+Stop it with `docker compose down`.
+
 ## Quick start
 
 1. Create an API key on the Security Server (API key management works from localhost by default):
@@ -113,10 +141,14 @@ Certificate labels: `token_id`, `key_usage` (`AUTHENTICATION` or `SIGNING`), `ow
 Older Security Server versions do not have every endpoint. A missing endpoint only sets its
 `xroad_scrape_endpoint_success` to 0; the other metrics are still exported.
 
-## Alerts
+## Alerts and dashboard
 
 [`examples/alerts.yml`](examples/alerts.yml) has Prometheus alert rules for the cases listed at
 the top. Adjust the thresholds to your environment.
+
+[`examples/grafana-dashboard.json`](examples/grafana-dashboard.json) is a Grafana dashboard. Import
+it in Grafana under Dashboards > New > Import. It has a Security Server selector, so one dashboard
+works for several servers.
 
 ## Building
 
