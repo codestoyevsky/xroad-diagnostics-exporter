@@ -16,6 +16,10 @@ dashboard and get alerts before something breaks, for example:
 
 It only reads data. It needs an API key with the read-only `XROAD_SECURITYSERVER_OBSERVER` role.
 
+![Grafana dashboard with demo data](docs/dashboard.png)
+
+*The included Grafana dashboard, with demo data.*
+
 This is a community project and is not affiliated with or endorsed by NIIS.
 
 ## How this compares to the built-in checks
@@ -145,6 +149,8 @@ Older Security Server versions do not have every endpoint. A missing endpoint on
 
 [`examples/alerts.yml`](examples/alerts.yml) has Prometheus alert rules for the cases listed at
 the top. Adjust the thresholds to your environment.
+
+![Prometheus alerts with demo data](docs/alerts.png)
 
 [`examples/grafana-dashboard.json`](examples/grafana-dashboard.json) is a Grafana dashboard. Import
 it in Grafana under Dashboards > New > Import. It has a Security Server selector, so one dashboard
