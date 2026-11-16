@@ -22,6 +22,20 @@ It only reads data. It needs an API key with the read-only `XROAD_SECURITYSERVER
 
 This is a community project and is not affiliated with or endorsed by NIIS.
 
+## Background
+
+A Security Server depends on a few things that can quietly go wrong: its certificates expire,
+OCSP responders and timestamping services become unreachable, the global configuration stops
+updating, or the software token stays logged out after a restart. The server notices all of
+these and shows them on the Diagnostics page, but nobody watches that page all day. Usually
+the problem is found when message exchange has already stopped.
+
+I ran into this while working on OCSP timeout handling in X-Road. The data needed for
+alerting is already in the management REST API, it just was not available in the format most
+monitoring setups use. This exporter closes that gap. X-Road's own move towards OpenTelemetry
+and Prometheus is still being planned, so until then this is a small tool that works with the
+current Security Server versions.
+
 ## How this compares to the built-in checks
 
 The Security Server has a [health check service](https://github.com/nordic-institute/X-Road/blob/develop/doc/Manuals/LoadBalancing/ig-xlb_x-road_external_load_balancer_installation_guide.md#34-health-check-service-configuration)
