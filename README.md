@@ -75,22 +75,25 @@ Stop it with `docker compose down`.
 
    Copy the `key` value from the response. It cannot be read again later.
 
-2. Run the exporter:
+2. Run the exporter with Docker:
 
    ```bash
-   export XROAD_SECURITY_SERVER_URL=https://ss.example.org:4000
-   export XROAD_API_KEY=<key>
-   ./xroad-diagnostics-exporter --tls-ca-file=ss-admin-ui.pem
-   ```
-
-   Or with Docker:
-
-   ```bash
-   docker build -t xroad-diagnostics-exporter .
-   docker run -p 9792:9792 \
+   docker run -d -p 9792:9792 \
      -e XROAD_SECURITY_SERVER_URL=https://ss.example.org:4000 \
      -e XROAD_API_KEY=<key> \
-     xroad-diagnostics-exporter --tls-insecure-skip-verify
+     -v $PWD/ss-admin-ui.pem:/ss-admin-ui.pem:ro \
+     ghcr.io/codestoyevsky/xroad-diagnostics-exporter:latest --tls-ca-file=/ss-admin-ui.pem
+   ```
+
+   Or download the Linux binary from the
+   [releases page](https://github.com/codestoyevsky/xroad-diagnostics-exporter/releases) and run it,
+   for example on the Security Server itself:
+
+   ```bash
+   tar -xzf xroad-diagnostics-exporter-*-linux-amd64.tar.gz
+   export XROAD_SECURITY_SERVER_URL=https://localhost:4000
+   export XROAD_API_KEY=<key>
+   ./xroad-diagnostics-exporter --tls-ca-file=ss-admin-ui.pem
    ```
 
 3. Add it to Prometheus:
