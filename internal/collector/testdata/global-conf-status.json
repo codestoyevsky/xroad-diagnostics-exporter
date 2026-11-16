@@ -1,0 +1,6 @@
+[
+  {
+    "download_url": "http://cs.example.org/internalconf",
+    "connection_status": { "status_class": "OK", "error": null }
+  }
+]

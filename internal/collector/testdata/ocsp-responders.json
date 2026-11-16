@@ -1,0 +1,20 @@
+[
+  {
+    "distinguished_name": "CN=Test CA, O=Example",
+    "ocsp_responders": [
+      {
+        "url": "http://ocsp.example.org",
+        "status_class": "FAIL",
+        "prev_update_at": "2025-11-16T09:58:00.000Z",
+        "next_update_at": "2025-11-16T10:18:00.000Z",
+        "error": { "code": "network_error", "metadata": ["Connection refused"] }
+      },
+      {
+        "url": "http://ocsp2.example.org",
+        "status_class": "OK",
+        "prev_update_at": "2025-11-16T09:58:00.000Z",
+        "next_update_at": "2025-11-16T10:18:00.000Z"
+      }
+    ]
+  }
+]

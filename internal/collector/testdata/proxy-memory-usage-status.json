@@ -1,0 +1,8 @@
+{
+  "max_memory": 4294967296,
+  "total_memory": 2147483648,
+  "used_memory": 1803886264,
+  "threshold": 80,
+  "usage_percent": 42,
+  "is_used_over_threshold": false
+}

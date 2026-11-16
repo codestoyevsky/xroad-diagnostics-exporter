@@ -1,0 +1,85 @@
+groups:
+  - name: xroad-security-server
+    rules:
+      - alert: XRoadExporterDown
+        expr: xroad_up == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cannot read diagnostics from Security Server {{ $labels.instance }}"
+          description: "Check that the admin UI is reachable and the API key is valid."
+
+      - alert: XRoadGlobalConfFailing
+        expr: xroad_globalconf_status{status_class="FAIL"} == 1
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Global configuration update failing on {{ $labels.instance }}"
+          description: "The Security Server stops serving messages when the global configuration expires."
+
+      - alert: XRoadGlobalConfNotUpdated
+        expr: time() - xroad_globalconf_last_update_timestamp_seconds > 30 * 60
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Global configuration not updated for 30 minutes on {{ $labels.instance }}"
+
+      - alert: XRoadOcspResponderFailing
+        expr: xroad_ocsp_responder_status{status_class="FAIL"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "OCSP responder {{ $labels.url }} failing on {{ $labels.instance }}"
+
+      - alert: XRoadTimestampingFailing
+        expr: xroad_timestamping_service_status{status_class="FAIL"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Timestamping service {{ $labels.url }} failing on {{ $labels.instance }}"
+          description: "Message log records cannot be timestamped. Check the timestamping settings if this continues."
+
+      - alert: XRoadCertificateExpiresSoon
+        expr: xroad_certificate_not_after_timestamp_seconds - time() < 30 * 24 * 3600
+        labels:
+          severity: warning
+        annotations:
+          summary: "{{ $labels.key_usage }} certificate {{ $labels.subject_cn }} expires in less than 30 days"
+          description: "Security Server {{ $labels.instance }}, serial {{ $labels.serial }}."
+
+      - alert: XRoadCertificateExpiresVerySoon
+        expr: xroad_certificate_not_after_timestamp_seconds - time() < 7 * 24 * 3600
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.key_usage }} certificate {{ $labels.subject_cn }} expires in less than 7 days"
+
+      - alert: XRoadCertificateOcspNotGood
+        expr: xroad_certificate_ocsp_good == 0 and xroad_certificate_active == 1
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No good OCSP response for active certificate {{ $labels.subject_cn }} on {{ $labels.instance }}"
+
+      - alert: XRoadTokenLoggedOut
+        expr: xroad_token_logged_in == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Token {{ $labels.token_name }} is logged out on {{ $labels.instance }}"
+          description: "Messages cannot be signed until the token PIN is entered."
+
+      - alert: XRoadProxyMemoryHigh
+        expr: xroad_proxy_memory_over_threshold == 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Proxy heap usage over threshold on {{ $labels.instance }}"
