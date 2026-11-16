@@ -254,7 +254,11 @@ func (c *Collector) collectTokens(ctx context.Context, ch chan<- prometheus.Metr
 		return err
 	}
 	for _, t := range tokens {
-		ch <- prometheus.MustNewConstMetric(tokenStatusDesc, prometheus.GaugeValue, 1, t.ID, t.Name, t.Type, t.Status)
+		// Not every version sends the token status (7.8.3 does not), so only
+		// export it when it is there.
+		if t.Status != "" {
+			ch <- prometheus.MustNewConstMetric(tokenStatusDesc, prometheus.GaugeValue, 1, t.ID, t.Name, t.Type, t.Status)
+		}
 		ch <- prometheus.MustNewConstMetric(tokenLoggedInDesc, prometheus.GaugeValue, boolValue(t.LoggedIn), t.ID, t.Name)
 		ch <- prometheus.MustNewConstMetric(tokenAvailableDesc, prometheus.GaugeValue, boolValue(t.Available), t.ID, t.Name)
 

@@ -142,6 +142,9 @@ current one, so alerts can use `xroad_ocsp_responder_status{status_class="FAIL"}
 Certificate labels: `token_id`, `key_usage` (`AUTHENTICATION` or `SIGNING`), `owner_id`,
 `subject_cn`, `issuer_cn`, `serial`, `hash`.
 
+Tested with Security Server 7.8.3. Some versions do not send the token status, and then
+`xroad_token_status` is not exported.
+
 Older Security Server versions do not have every endpoint. A missing endpoint only sets its
 `xroad_scrape_endpoint_success` to 0; the other metrics are still exported.
 
