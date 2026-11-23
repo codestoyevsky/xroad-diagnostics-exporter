@@ -153,7 +153,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min(xroad_globalconf_status{status_class=\"OK\",instance=~\"$instance\"})",
+          "expr": "min(sum without (status_class) (xroad_globalconf_status{status_class=\"OK\",instance=~\"$instance\"} or xroad_globalconf_status{status_class=\"WAITING\",instance=~\"$instance\"} * 0.5))",
           "refId": "A",
           "legendFormat": "__auto",
           "format": "time_series"
@@ -173,10 +173,15 @@
                   "color": "green",
                   "index": 0
                 },
-                "0": {
-                  "text": "Not OK",
-                  "color": "red",
+                "0.5": {
+                  "text": "Waiting",
+                  "color": "orange",
                   "index": 1
+                },
+                "0": {
+                  "text": "Failing",
+                  "color": "red",
+                  "index": 2
                 }
               }
             }
@@ -187,6 +192,10 @@
               {
                 "color": "red",
                 "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.5
               },
               {
                 "color": "green",
@@ -315,7 +324,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min((xroad_certificate_not_after_timestamp_seconds{instance=~\"$instance\"} - time()) / 86400)",
+          "expr": "min((xroad_certificate_not_after_timestamp_seconds{instance=~\"$instance\"} - time()) / 86400 and xroad_certificate_active{instance=~\"$instance\"} == 1)",
           "refId": "A",
           "legendFormat": "__auto",
           "format": "time_series"
@@ -386,7 +395,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min by (url) (xroad_ocsp_responder_status{status_class=\"OK\",instance=~\"$instance\"})",
+          "expr": "min by (url) (sum without (status_class) (xroad_ocsp_responder_status{status_class=\"OK\",instance=~\"$instance\"} or xroad_ocsp_responder_status{status_class=\"WAITING\",instance=~\"$instance\"} * 0.5))",
           "refId": "A",
           "legendFormat": "{{url}}",
           "format": "time_series"
@@ -406,10 +415,15 @@
                   "color": "green",
                   "index": 0
                 },
+                "0.5": {
+                  "text": "Waiting",
+                  "color": "orange",
+                  "index": 1
+                },
                 "0": {
                   "text": "Failing",
                   "color": "red",
-                  "index": 1
+                  "index": 2
                 }
               }
             }
@@ -420,6 +434,10 @@
               {
                 "color": "red",
                 "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.5
               },
               {
                 "color": "green",
@@ -467,7 +485,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min by (url) (xroad_timestamping_service_status{status_class=\"OK\",instance=~\"$instance\"})",
+          "expr": "min by (url) (sum without (status_class) (xroad_timestamping_service_status{status_class=\"OK\",instance=~\"$instance\"} or xroad_timestamping_service_status{status_class=\"WAITING\",instance=~\"$instance\"} * 0.5))",
           "refId": "A",
           "legendFormat": "{{url}}",
           "format": "time_series"
@@ -487,10 +505,15 @@
                   "color": "green",
                   "index": 0
                 },
+                "0.5": {
+                  "text": "Waiting",
+                  "color": "orange",
+                  "index": 1
+                },
                 "0": {
                   "text": "Failing",
                   "color": "red",
-                  "index": 1
+                  "index": 2
                 }
               }
             }
@@ -501,6 +524,10 @@
               {
                 "color": "red",
                 "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.5
               },
               {
                 "color": "green",
@@ -759,7 +786,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min by (url) (xroad_ocsp_responder_status{status_class=\"OK\",instance=~\"$instance\"})",
+          "expr": "min by (url) (sum without (status_class) (xroad_ocsp_responder_status{status_class=\"OK\",instance=~\"$instance\"} or xroad_ocsp_responder_status{status_class=\"WAITING\",instance=~\"$instance\"} * 0.5))",
           "refId": "A",
           "legendFormat": "OCSP {{url}}",
           "format": "time_series"
@@ -769,7 +796,7 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "min by (url) (xroad_timestamping_service_status{status_class=\"OK\",instance=~\"$instance\"})",
+          "expr": "min by (url) (sum without (status_class) (xroad_timestamping_service_status{status_class=\"OK\",instance=~\"$instance\"} or xroad_timestamping_service_status{status_class=\"WAITING\",instance=~\"$instance\"} * 0.5))",
           "refId": "B",
           "legendFormat": "TSA {{url}}",
           "format": "time_series"
@@ -789,10 +816,15 @@
                   "color": "green",
                   "index": 0
                 },
+                "0.5": {
+                  "text": "Waiting",
+                  "color": "orange",
+                  "index": 1
+                },
                 "0": {
                   "text": "Failing",
                   "color": "red",
-                  "index": 1
+                  "index": 2
                 }
               }
             }
@@ -803,6 +835,10 @@
               {
                 "color": "red",
                 "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.5
               },
               {
                 "color": "green",

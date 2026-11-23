@@ -45,7 +45,7 @@ groups:
           description: "Message log records cannot be timestamped. Check the timestamping settings if this continues."
 
       - alert: XRoadCertificateExpiresSoon
-        expr: xroad_certificate_not_after_timestamp_seconds - time() < 30 * 24 * 3600
+        expr: (xroad_certificate_not_after_timestamp_seconds - time() < 30 * 24 * 3600) and xroad_certificate_active == 1
         labels:
           severity: warning
         annotations:
@@ -53,7 +53,7 @@ groups:
           description: "Security Server {{ $labels.instance }}, serial {{ $labels.serial }}."
 
       - alert: XRoadCertificateExpiresVerySoon
-        expr: xroad_certificate_not_after_timestamp_seconds - time() < 7 * 24 * 3600
+        expr: (xroad_certificate_not_after_timestamp_seconds - time() < 7 * 24 * 3600) and xroad_certificate_active == 1
         labels:
           severity: critical
         annotations:
